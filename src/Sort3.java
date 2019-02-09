@@ -36,7 +36,40 @@ public class Sort3 {
     }
 
     public static int[] counting_sort (int[] array, int k) {
-        return array;
+
+        /*
+        In Java arrays elements values by default are 0 so no need for
+        the first loop to initialize elements to zero. If using other
+        languages then must have initialize all values to zero
+         */
+        int [] b = new int [array.length];
+        int [] c = new int [k + 1];
+
+
+        /*
+        populate auxiliary array with frequencies of elements in
+        a[] corresponding to the index of c[]
+         */
+        for (int j = 0; j < array.length; j++) {
+            c[array[j]] = c[array[j]] + 1;
+        }
+
+        /*
+        contains the number of values in array that is less than
+        j
+         */
+        for (int i = 1; i <= k; i++) {
+            c[i] = c[i] + c[i - 1];
+        }
+        /*
+        Places the elements in correct order from starting from the right to the left.
+         */
+
+        for (int j = array.length - 1; j >= 0 ; j--) {
+            b[c[array[j]] - 1] = array[j];
+            c[array[j]] = c[array[j]] - 1;
+        }
+        return b;
     }
 
 
@@ -121,6 +154,6 @@ public class Sort3 {
             boolean flag = Sort3.check_sorted(array);
             System.out.println(n + "," + t + "," + flag);
         }
-        System.out.println("Heap sort ends ------------------");
+        System.out.println("Counting sort ends ------------------");
     }
 }
