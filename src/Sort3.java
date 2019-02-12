@@ -72,6 +72,62 @@ public class Sort3 {
         return b;
     }
 
+    public static void heap_sort(int array[]) {
+
+        //creates a maxHeap from a given list of numbers
+        buildMaxHeap(array);
+
+        /*
+             swap array[0] (largest element in the array) with
+             array[size) (last element in heap) then decrease size
+             by 1 in the for loop to "remove" the max number from heap
+         */
+        for (int i=array.length -1; i>=0; i--) {
+
+            int temp = array[0];
+            array[0] = array[i];
+            array[i] = temp;
+
+            /*
+                call heapify again to ensure heap property is maintained
+                once the largest number is swapped
+             */
+            heapify(array, i, 0);
+        }
+    }
+
+    public static void buildMaxHeap (int array[]) {
+        int size = array.length;
+        for (int i = size / 2 - 1; i >= 0; i--)
+            heapify(array, size, i);
+    }
+    public static int getLeftChildIndex (int i) {return 2*i + 1;}
+    public static int getRightChildIndex (int i) {return 2*i + 2;}
+    public static void heapify(int array[], int heapSize, int i) {
+
+        int largest = i; //assumes the parent is larger than the children
+        int leftChildIndex = getLeftChildIndex(i);
+        int rightChildIndex  = getRightChildIndex(i);
+
+        // If left child is larger than parent
+        if (leftChildIndex < heapSize && array[leftChildIndex] > array[largest])
+            largest = leftChildIndex;
+
+        // If right child is larger than largest so far
+        if (rightChildIndex  < heapSize && array[rightChildIndex ] > array[largest])
+            largest = rightChildIndex ;
+
+        // If largest is not parent meaning that it is now either children swap their respective positions
+        if (largest != i) {
+            int swap = array[i];
+            array[i] = array[largest];
+            array[largest] = swap;
+
+            // Recursive call to  heapify the sub-tree to maintain heap property
+            heapify(array, heapSize, largest);
+        }
+    }
+
 
     public static int[] generate_random_array (int n, int k) {
         List<Integer> list;
@@ -155,5 +211,19 @@ public class Sort3 {
             System.out.println(n + "," + t + "," + flag);
         }
         System.out.println("Counting sort ends ------------------");
+
+        System.out.println("Heap sort starts ------------------");
+        for (int n = 100000; n <= 1000000; n=n+100000) {
+            int[] array = Sort3.generate_random_array(n);
+            long t1 = System.currentTimeMillis();
+            Sort3.heap_sort(array);
+            long t2 = System.currentTimeMillis();
+            long t = t2 - t1;
+            boolean flag = Sort3.check_sorted(array);
+            System.out.println(n + "," + t + "," + flag);
+        }
+        System.out.println("Heap sort ends ------------------");
     }
+
+
 }
